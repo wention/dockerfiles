@@ -1,0 +1,25 @@
+version: '3'
+services:
+  clash:
+    # ghcr.io/dreamacro/clash
+    # ghcr.io/dreamacro/clash-premium
+    # dreamacro/clash
+    # dreamacro/clash-premium
+    image: dreamacro/clash
+    volumes:
+      - ./clash.yaml:/root/.config/clash/config.yaml
+      # - ./ui:/ui # dashboard volume
+    ports:
+      #- "7890:7890"
+      #- "7891:7891"
+       - "9091:9090" # external controller (Restful API)
+    restart: unless-stopped
+  mtproxy:
+    image: nineseconds/mtg:2
+    ports:
+      - "8443:3128"
+    restart: unless-stopped
+    volumes:
+      - ./mtproxy.toml:/config.toml
+    depends_on:
+      - clash
