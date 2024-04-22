@@ -36,6 +36,7 @@ build() {
     fi
 
     sed -i 's/#src-git helloworld/src-git helloworld/g' ./feeds.conf.default
+    echo "src-git openclash https://github.com/vernesong/OpenClash.git" >> ./feeds.conf.default
     ./scripts/feeds update -a
     ./scripts/feeds install -a
 

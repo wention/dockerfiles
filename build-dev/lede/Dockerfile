@@ -78,6 +78,11 @@ RUN apt-get -y update \
     && apt clean \
     && rm -rf /var/lib/apt/lists/*
 
+RUN adduser --uid 1000 --disabled-password --gecos '' openwrt 
+RUN adduser openwrt sudo
+RUN echo '%openwrt ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER openwrt
 
 WORKDIR /build
 
