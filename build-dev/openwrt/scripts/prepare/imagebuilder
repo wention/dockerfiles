@@ -1,0 +1,7 @@
+#!/bin/sh
+
+wget -qO- https://mirrors.ustc.edu.cn/openwrt/releases/23.05.3/targets/x86/64/openwrt-imagebuilder-23.05.3-x86-64.Linux-x86_64.tar.xz | tar xvJ --strip-components 1
+
+sed -i 's|downloads.openwrt.org|mirrors.ustc.edu.cn/openwrt|' repositories.conf
+
+make image PACKAGES="-dnsmasq uhttpd luci luci-base luci-compat luci-i18n-base-zh-cn luci-app-openclash luci-theme-argon luci-app-acme luci-app-smartdns luci-app-ddns luci-app-wol" FILES="files" ROOTFS_PARTSIZE=512

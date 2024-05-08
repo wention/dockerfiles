@@ -1,0 +1,6 @@
+#!/bin/sh
+
+uci -q batch << EOI
+set network.lan.proto='dhcp'
+set luci.main.lang='zh_cn'
+EOI
