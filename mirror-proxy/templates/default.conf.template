@@ -1,0 +1,13 @@
+server {
+    listen 80;
+    server_name npmjs.tornets.com;
+
+    location / {
+       proxy_pass http://nexus:8081/repository/npmjs/;
+       proxy_set_header Accept-Encoding "";
+
+       sub_filter 'nexus:8081/repository/npmjs' '$http_host';
+       sub_filter_once off;
+       sub_filter_types application/json;
+    }
+}

@@ -1,0 +1,8 @@
+server {
+    listen 5000;
+    server_name docker.tornets.com;
+
+    location / {
+       proxy_pass http://nexus:8081/repository/docker/;
+    }
+}
