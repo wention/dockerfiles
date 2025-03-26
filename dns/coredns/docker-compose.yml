@@ -1,0 +1,12 @@
+version: "3.7"
+services:
+  coredns:
+    image: coredns/coredns
+    container_name: coredns
+    restart: unless-stopped
+    ports:
+      - "5353:53/udp"
+      - "9253:9253/tcp"
+    volumes:
+      - ./config:/etc/coredns
+    command: -conf /etc/coredns/Corefile 
