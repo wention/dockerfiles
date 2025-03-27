@@ -1,0 +1,10 @@
+version: "3"
+services:
+  squid:
+    image: ubuntu/squid
+    ports:
+      - "3128:3128"
+    volumes:
+      - ./cache:/var/spool/squid
+      - ./config:/etc/squid
+    restart: always
