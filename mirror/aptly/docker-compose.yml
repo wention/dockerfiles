@@ -1,0 +1,12 @@
+version: "3"
+services:
+  aptly:
+    container_name: aptly
+    image: urpylka/aptly
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./data:/opt/aptly
+    # If want to use additional environments,
+    # you can set them in .env file
