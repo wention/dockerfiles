@@ -11,6 +11,8 @@ services:
     environment:
       - USER_UID=1000
       - USER_GID=1000
+      - GITEA__actions__ENABLED=true
+      - GITEA__actions__DEFAULT_ACTIONS_URL=self
     restart: always
     networks:
       - gitea
