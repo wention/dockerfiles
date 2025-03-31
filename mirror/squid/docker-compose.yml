@@ -5,6 +5,6 @@ services:
     ports:
       - "3128:3128"
     volumes:
+      - ./squid.conf:/etc/squid/squid.conf
       - ./cache:/var/spool/squid
-      - ./config:/etc/squid
-    restart: always
+      restart: always
