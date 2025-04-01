@@ -5,6 +5,8 @@ services:
     ports:
       - "3128:3128"
     volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
       - ./squid.conf:/etc/squid/squid.conf
       - ./cache:/var/spool/squid
       restart: always
