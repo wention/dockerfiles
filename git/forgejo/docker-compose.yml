@@ -1,0 +1,41 @@
+networks:
+  forgejo:
+    external: false
+
+services:
+  server:
+    image: codeberg.org/forgejo/forgejo:15
+    container_name: forgejo
+    environment:
+      - FORGEJO__SERVER__DOMAIN=${DOMAIN:-localhost}
+      - FORGEJO__SERVER__DOMAIN=${DOMAIN:-localhost}
+      - FORGEJO__SERVER__SSH_PORT=3022
+      - FORGEJO__ACTIONS__DEFAULT_ACTIONS_URL=${ROOT_URL:-http://localhost:3000}
+      - FORGEJO__ACTIONS__LOG_RETENTION_DAYS=30
+      - FORGEJO__ACTIONS__ARTIFACT_RETENTION_DAYS=30
+      - FORGEJO__database__HOST=db:5432
+      - FORGEJO__database__NAME=${DB_NAME:-forgejo}
+      - FORGEJO__database__USER=${DB_USER:-forgejo}
+      - FORGEJO__database__PASSWD=${DB_PASS:-forgejo}
+    restart: always
+    networks:
+      - forgejo
+    volumes:
+      - ./forgejo:/data
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - '3000:3000'
+      - '3022:22'
+    depends_on:
+      - db
+  db:
+    image: postgres:14
+    restart: always
+    environment:
+      - POSTGRES_DB=${DB_NAME:-forgejo}
+      - POSTGRES_USER=${DB_USER:-forgejo}
+      - POSTGRES_PASSWORD=${DB_PASS:-forgejo}
+    networks:
+      - forgejo
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
