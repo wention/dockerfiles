@@ -1,0 +1,14 @@
+services:
+  seaweedfs:
+    image: chrislusf/seaweedfs
+    environment:
+      AWS_ACCESS_KEY_ID: admin
+      AWS_SECRET_ACCESS_KEY: secret
+      S3_BUCKET: my-bucket
+    ports:
+      - 8333:8333
+      - 8888:8888
+      - 9333:9333
+      - 23646:23646
+    volumes:
+      - ./data:/data
