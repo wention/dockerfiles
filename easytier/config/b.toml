@@ -1,0 +1,25 @@
+
+hostname = "node-b"
+dhcp = true
+
+[network_identity]
+network_name = "abc"
+network_secret = "123456"
+
+[[peer]]
+uri = "tcp://et.abc.com:11010"
+
+[flags]
+accept_dns = true
+private_mode = true
+enable_kcp_proxy = true
+enable_quic_proxy = true
+use_smoltcp = true
+
+data_compress_algo = 2
+multi_thread = true
+multi_thread_count = 4
+latency_first = true
+#disable_p2p = true
+disable_ipv6 = true
+#disable_udp_hole_punching = true

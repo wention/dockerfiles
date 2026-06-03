@@ -1,0 +1,17 @@
+services:
+  easytier:
+    image: easytier/easytier
+    container_name: easytier
+    restart: unless-stopped
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      - TZ=Asia/Shanghai
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    volumes:
+      - ./config:/app
+      - /etc/machine-id:/etc/machine-id:ro
+    command: -c a.toml -c b.toml
