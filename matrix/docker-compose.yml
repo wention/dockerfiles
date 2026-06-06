@@ -1,0 +1,99 @@
+# Continuwuity - Using Caddy Docker Image
+
+services:
+  caddy:
+    image: "docker.io/caddy:latest"
+    ports:
+      - 80:80
+      - 443:443
+      - 8448:8448
+    networks:
+      - caddy
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
+    configs:
+      - source: Caddyfile
+        target: /etc/caddy/Caddyfile
+
+  cinny:
+    image: ghcr.io/cinnyapp/cinny:latest
+    restart: unless-stopped
+    networks:
+      - caddy
+    configs:
+      - source: CinnyConfig
+        target: /app/config.json
+
+  homeserver:
+    image: "ghcr.io/continuwuity/continuwuity:latest"
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    command: /sbin/conduwuit
+    volumes:
+      - db:/var/lib/continuwuity
+      #- ./continuwuity.toml:/etc/continuwuity.toml
+    environment:
+      CONTINUWUITY_SERVER_NAME: example.com
+      CONTINUWUITY_DATABASE_PATH: /var/lib/continuwuity
+      CONTINUWUITY_ADDRESS: 0.0.0.0
+      CONTINUWUITY_PORT: 8008
+      CONTINUWUITY_ALLOW_REGISTRATION: true
+      CONTINUWUITY_ALLOW_FEDERATION: false
+      CONTINUWUITY_WELL_KNOWN__CLIENT: https://mt.example.com
+      CONTINUWUITY_WELL_KNOWN__SERVER: mt.example.com:443
+
+    networks:
+      - caddy
+
+networks:
+  caddy:
+
+volumes:
+  db:
+
+configs:
+  Caddyfile:
+    content: |
+      https://mt.example.com:443 {
+        tls internal
+
+        handle_path /.well-known/matrix/* {
+          header Access-Control-Allow-Origin *
+          reverse_proxy http://homeserver:8008
+        }
+        handle /_matrix/* {
+          reverse_proxy http://homeserver:8008
+        }
+        handle {
+          reverse_proxy http://cinny:80
+        }
+      }
+
+      example.com:443 {
+        tls internal
+        reverse_proxy /.well-known/matrix* homeserver:8008
+      }
+
+  CinnyConfig:
+    content: |
+      {
+        "defaultHomeserver": 0,
+        "homeserverList": ["example.com"],
+        "allowCustomHomeservers": true,
+
+        "featuredCommunities": {
+          "openAsDefault": false,
+          "spaces": [
+        ],
+        "rooms": [
+          ],
+        "servers": ["example.com"]
+        },
+
+        "hashRouter": {
+          "enabled": false,
+          "basename": "/"
+        }
+      }
